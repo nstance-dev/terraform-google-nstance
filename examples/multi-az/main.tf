@@ -150,7 +150,11 @@ module "network" {
 
   # Public load balancer on ports 80 and 443, placed in ingress subnets
   load_balancers = {
-    www = { ports = [80, 443], subnets = "ingress", public = true }
+    www = {
+      listeners = [{ port = 80 }, { port = 443 }]
+      subnets   = "ingress"
+      public    = true
+    }
   }
 }
 
@@ -175,7 +179,7 @@ module "shard_a" {
       "ingress" = {
         size           = 2
         subnet_pool    = "ingress"
-        load_balancers = ["www"] # Register instances with the www LB
+        load_balancers = { "www" = [] } # Register instances with all www listeners
       }
       "workers" = {
         size        = 10
@@ -205,7 +209,7 @@ module "shard_b" {
       "ingress" = {
         size           = 2
         subnet_pool    = "ingress"
-        load_balancers = ["www"]
+        load_balancers = { "www" = [] }
       }
       "workers" = {
         size        = 10
@@ -235,7 +239,7 @@ module "shard_c" {
       "ingress" = {
         size           = 2
         subnet_pool    = "ingress"
-        load_balancers = ["www"]
+        load_balancers = { "www" = [] }
       }
       "workers" = {
         size        = 10
