@@ -32,23 +32,24 @@ provider "google" {
 
 module "cluster" {
   source  = "nstance-dev/nstance/google//modules/cluster"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   cluster_id = var.cluster_id
 }
 
 module "account" {
   source  = "nstance-dev/nstance/google//modules/account"
-  version = "~> 1.0"
+  version = "~> 2.0"
   cluster = module.cluster
 }
 
 module "network" {
   source  = "nstance-dev/nstance/google//modules/network"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
-  cluster       = module.cluster
-  vpc_cidr_ipv4 = "10.0.0.0/16"
+  cluster          = module.cluster
+  vpc_cidr_ipv4    = "10.0.0.0/16"
+  use_provider_nat = true
 
   subnets = {
     # Public subnets with Cloud NAT (regional NAT covers all zones)
@@ -163,7 +164,7 @@ module "network" {
 # Create shards for each zone
 module "shard_a" {
   source  = "nstance-dev/nstance/google//modules/shard"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   cluster = module.cluster
   account = module.account
@@ -193,7 +194,7 @@ module "shard_a" {
 
 module "shard_b" {
   source  = "nstance-dev/nstance/google//modules/shard"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   cluster = module.cluster
   account = module.account
@@ -223,7 +224,7 @@ module "shard_b" {
 
 module "shard_c" {
   source  = "nstance-dev/nstance/google//modules/shard"
-  version = "~> 1.0"
+  version = "~> 2.0"
 
   cluster = module.cluster
   account = module.account
